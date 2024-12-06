@@ -1,3 +1,67 @@
+@import url('https://rsms.me/inter/inter.css');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 215 25% 98%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 215 25% 27%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 215 15% 40%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 215 25% 90%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 215 25% 95%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 215 25% 85%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 215 25% 27%;
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium;
+    @apply transition-colors focus-visible:outline-none focus-visible:ring-2;
+    @apply focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply disabled:opacity-50 disabled:pointer-events-none ring-offset-background;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary text-white hover:bg-primary-600;
+    @apply shadow-sm hover:shadow-md transition-all duration-200;
+  }
+
+  .btn-secondary {
+    @apply btn bg-secondary-100 text-secondary-700 hover:bg-secondary-200;
+  }
+
+  .input-base {
+    @apply flex h-10 w-full rounded-md border border-gray-300;
+    @apply bg-white px-3 py-2 text-sm shadow-sm;
+    @apply transition duration-200 ease-in-out;
+    @apply focus:border-primary-500 focus:ring-2 focus:ring-primary-200;
+    @apply disabled:bg-gray-50 disabled:cursor-not-allowed;
+    @apply placeholder:text-gray-400;
+  }
+}

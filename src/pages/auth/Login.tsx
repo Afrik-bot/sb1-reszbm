@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from '@/utils/validation';
 import Input from '@/components/ui/Input';
 import PasswordInput from '@/components/ui/PasswordInput';
+import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 import Button from '@/components/ui/Button';
 
 type LoginFormData = {
@@ -36,6 +37,17 @@ export default function Login() {
       navigate('/');
     } catch (error) {
       setError('Failed to sign in');
+    }
+  };
+
+  const handleGoogleSuccess = async (response: any) => {
+    try {
+      setError('');
+      // In production, send the token to your backend
+      console.log('Google auth success:', response);
+      navigate('/');
+    } catch (error) {
+      setError('Failed to sign in with Google');
     }
   };
 
@@ -115,9 +127,25 @@ export default function Login() {
               </Button>
             </div>
 
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">Or</span>
+              </div>
+            </div>
+
+            <GoogleSignInButton
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError('Google sign in failed')}
+            />
+
             <div className="mt-6 text-sm text-center border-t pt-6">
-              <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500">
-                Don't have an account? Sign up
+              <span className="text-gray-600">Don't have an account?</span>
+              {' '}
+              <Link to="/register" className="font-medium text-primary-600 hover:text-primary-500">
+                Sign up
               </Link>
             </div>
           </form>

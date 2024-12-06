@@ -1,60 +1,34 @@
-import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-  type ColumnDef
-} from '@tanstack/react-table';
+import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from '@tremor/react';
 
 interface DataGridProps<T> {
   data: T[];
-  columns: ColumnDef<T, any>[];
+  columns: {
+    header: string;
+    cell: (props: { row: T }) => React.ReactNode;
+  }[];
 }
 
 export function DataGrid<T>({ data, columns }: DataGridProps<T>) {
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
-                <th
-                  key={header.id}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                </th>
-              ))}
-            </tr>
+    <Table>
+      <TableHead>
+        <TableRow>
+          {columns.map((column, index) => (
+            <TableHeaderCell key={index}>{column.header}</TableHeaderCell>
           ))}
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {table.getRowModel().rows.map(row => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map(cell => (
-                <td
-                  key={cell.id}
-                  className="px-6 py-4 whitespace-nowrap"
-                >
-                  {flexRender(
-                    cell.column.columnDef.cell,
-                    cell.getContext()
-                  )}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {data.map((row, rowIndex) => (
+          <TableRow key={rowIndex}>
+            {columns.map((column, colIndex) => (
+              <TableCell key={colIndex}>
+                {column.cell({ row })}
+              </TableCell>
+            ))}
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }

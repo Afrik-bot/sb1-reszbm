@@ -5,7 +5,8 @@ import { User } from 'firebase/auth';
 const MOCK_USER = {
   uid: 'test-user-123',
   email: 'test@example.com',
-  displayName: 'Test User'
+  displayName: 'John Smith',
+  userType: 'consultant'
 };
 
 interface AuthContextType {

@@ -1,21 +1,25 @@
 {
   "compilerOptions": {
-    "module": "esnext",
-    "target": "ES2020",
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "noEmitHelpers": true,
-    "noEmitOnError": true,
-    "skipLibCheck": true,
-    "lib": ["ESNext", "dom"],
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "skipLibCheck": false,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "~/*": ["app/*"],
-      "@/*": ["app/*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["app/**/*"],
-  "files": ["./references.d.ts"],
-  "exclude": ["node_modules", "platforms"]
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

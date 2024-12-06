@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { ProfileService } from '../services/profile.service';
 import ClientDashboard from '@/components/dashboard/ClientDashboard';
@@ -8,9 +8,14 @@ import type { UserProfile, ConsultantProfile } from '../types/profile';
 
 export default function Dashboard() {
   const { currentUser } = useAuth();
+  const [activeTab, setActiveTab] = useState('overview');
   const [profile, setProfile] = useState<UserProfile | ConsultantProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const handleTabChange = useCallback((tab: string) => {
+    setActiveTab(tab);
+  }, []);
 
   useEffect(() => {
     if (currentUser) {
@@ -58,8 +63,20 @@ export default function Dashboard() {
   return (
     <>
       {profile.userType === 'admin' && <AdminDashboard profile={profile} />}
-      {profile.userType === 'consultant' && <ConsultantDashboard profile={profile as ConsultantProfile} />}
-      {profile.userType === 'client' && <ClientDashboard profile={profile} />}
+      {profile.userType === 'consultant' && (
+        <ConsultantDashboard 
+          profile={profile as ConsultantProfile}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
+      )}
+      {profile.userType === 'client' && (
+        <ClientDashboard 
+          profile={profile}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
+      )}
     </>
   );
 }

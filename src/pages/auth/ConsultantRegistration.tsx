@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { SUBSCRIPTION_PLANS } from '../../types/subscription';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { registrationSchema, type RegistrationForm } from '@/utils/validation';
+import { registrationSchema } from '@/utils/validation';
+import SubscriptionPlanCard from '@/components/auth/SubscriptionPlanCard';
 import AuthLayout from '@/components/auth/AuthLayout';
 import Card from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
@@ -12,14 +12,24 @@ import PasswordInput from '@/components/ui/PasswordInput';
 import Button from '@/components/ui/Button';
 import { useToast } from '@/hooks/useToast';
 
+type RegistrationForm = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  firstName: string;
+  lastName: string;
+  planId: string;
+};
+
 export default function ConsultantRegistration() {
   const navigate = useNavigate();
   const { register } = useAuth();
-  const [selectedPlan, setSelectedPlan] = useState('basic');
   const { addToast } = useToast();
   
   const {
     register: registerField,
+    setValue,
+    watch,
     handleSubmit,
     formState: { errors, isSubmitting }
   } = useForm<RegistrationForm>({
@@ -92,31 +102,15 @@ export default function ConsultantRegistration() {
               <label className="block text-sm font-medium text-gray-700">
                 Select Subscription Plan
               </label>
-              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                {SUBSCRIPTION_PLANS.map((plan) => (
-                  <div
-                    key={plan.id}
-                    className={`relative rounded-lg border p-4 cursor-pointer transition-all duration-200 ${
-                      selectedPlan === plan.id
-                        ? 'border-primary-500 bg-primary-50 shadow-md'
-                        : 'border-gray-300 hover:border-primary-300'
-                    }`}
-                    onClick={() => {
-                      setSelectedPlan(plan.id);
-                      registerField('planId').onChange(plan.id);
-                    }}
-                  >
-                    <h3 className="text-lg font-medium text-gray-900">{plan.name}</h3>
-                    <p className="mt-1 text-sm text-gray-500">${plan.price}/month</p>
-                    <ul className="mt-2 space-y-1">
-                      {plan.features.map((feature, index) => (
-                        <li key={index} className="text-sm text-gray-600">
-                          • {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+              <div className="mt-4">
+                <SubscriptionPlanCard
+                  selectedPlan={watch('planId')}
+                  onSelectPlan={(planId) => {
+                    setValue('planId', planId, {
+                      shouldValidate: true
+                    });
+                  }}
+                />
               </div>
             </div>
 

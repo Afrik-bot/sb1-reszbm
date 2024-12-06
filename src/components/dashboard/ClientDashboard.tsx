@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { UserProfile } from '@/types/profile';
+import VideoConsultationSection from './shared/VideoConsultationSection';
 import ProfileSection from './client/ProfileSection';
 import ActivityFeed from './client/ActivityFeed';
 import NotificationCenter from './client/NotificationCenter';
@@ -12,16 +13,12 @@ import { Card } from '@tremor/react';
 
 interface ClientDashboardProps {
   profile: UserProfile;
+  activeTab: string;
+  onTabChange: (tab: string) => void;
 }
 
-export default function ClientDashboard({ profile }: ClientDashboardProps) {
-  const [activeTab, setActiveTab] = useState('overview');
+export default function ClientDashboard({ profile, activeTab, onTabChange }: ClientDashboardProps) {
   const [notifications, setNotifications] = useState([]);
-
-  useEffect(() => {
-    // Load notifications
-    // This would be replaced with actual API calls
-  }, []);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -43,40 +40,43 @@ export default function ClientDashboard({ profile }: ClientDashboardProps) {
 
         {/* Main Content */}
         <div className="col-span-12 lg:col-span-9">
-        <nav className="flex border-b border-gray-200">
-          {[
-            ['overview', 'Overview'],
-            ['activity', 'Activity'],
-            ['projects', 'Projects'],
-            ['documents', 'Documents'],
-            ['payments', 'Payments'],
-            ['support', 'Support'],
-            ['messages', 'Messages']
-          ].map(([tab, label]) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-3 text-sm font-medium ${
-                activeTab === tab
-                  ? 'border-b-2 border-blue-500 text-blue-600'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </nav>
+          <nav className="flex border-b border-gray-200">
+            {[
+              ['overview', 'Overview'],
+              ['projects', 'Projects'],
+              ['documents', 'Documents'],
+              ['payments', 'Payments'],
+              ['consultations', 'Video Consultations'],
+              ['messages', 'Messages']
+            ].map(([tab, label]) => (
+              <button
+                key={tab}
+                onClick={() => onTabChange(tab)}
+                className={`px-4 py-3 text-sm font-medium ${
+                  activeTab === tab
+                    ? 'border-b-2 border-primary-500 text-primary-600'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </nav>
 
-        <div className="p-6">
-          {activeTab === 'overview' && <ActivityFeed userId={profile.id} />}
-          {activeTab === 'activity' && <ActivityFeed userId={profile.id} />}
-          {activeTab === 'projects' && <ProjectStatus userId={profile.id} />}
-          {activeTab === 'documents' && <DocumentCenter userId={profile.id} />}
-          {activeTab === 'payments' && <PaymentHistory userId={profile.id} />}
-          {activeTab === 'support' && <SupportTickets userId={profile.id} />}
-          {activeTab === 'messages' && <MessagingCenter userId={profile.id} />}
+          <div className="p-6">
+            {activeTab === 'overview' && <ActivityFeed userId={profile.id} />}
+            {activeTab === 'projects' && <ProjectStatus userId={profile.id} />}
+            {activeTab === 'documents' && <DocumentCenter userId={profile.id} />}
+            {activeTab === 'payments' && <PaymentHistory userId={profile.id} />}
+            {activeTab === 'consultations' && (
+              <VideoConsultationSection
+                userId={profile.id}
+                userType="client"
+              />
+            )}
+            {activeTab === 'messages' && <MessagingCenter userId={profile.id} />}
+          </div>
         </div>
-      </div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { ConsultantProfile } from '@/types/profile';
+import VideoConsultationSection from './shared/VideoConsultationSection';
 import CaseOverview from './consultant/CaseOverview';
 import ClientAnalytics from './consultant/ClientAnalytics';
 import FinancialMetrics from './consultant/FinancialMetrics';
@@ -11,11 +11,11 @@ import { Client } from '@/types/client';
 
 interface ConsultantDashboardProps {
   profile: ConsultantProfile;
+  activeTab: string;
+  onTabChange: (tab: string) => void;
 }
 
-export default function ConsultantDashboard({ profile }: ConsultantDashboardProps) {
-  const [activeTab, setActiveTab] = useState('cases');
-
+export default function ConsultantDashboard({ profile, activeTab, onTabChange }: ConsultantDashboardProps) {
   // Mock data for demonstration
   const mockCases: Case[] = [
     {
@@ -69,14 +69,15 @@ export default function ConsultantDashboard({ profile }: ConsultantDashboardProp
             ['financial', 'Financial'],
             ['calendar', 'Calendar'],
             ['documents', 'Documents'],
-            ['time', 'Time & Productivity']
+            ['time', 'Time & Productivity'],
+            ['consultations', 'Video Consultations']
           ].map(([tab, label]) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => onTabChange(tab)}
               className={`px-4 py-3 text-sm font-medium whitespace-nowrap ${
                 activeTab === tab
-                  ? 'border-b-2 border-blue-500 text-blue-600'
+                  ? 'border-b-2 border-primary-500 text-primary-600'
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -102,6 +103,12 @@ export default function ConsultantDashboard({ profile }: ConsultantDashboardProp
           {activeTab === 'calendar' && <CalendarView cases={mockCases} />}
           {activeTab === 'documents' && <DocumentManagement cases={mockCases} />}
           {activeTab === 'time' && <TimeProductivity cases={mockCases} />}
+          {activeTab === 'consultations' && (
+            <VideoConsultationSection
+              userId={profile.id}
+              userType="consultant"
+            />
+          )}
         </div>
       </div>
     </div>

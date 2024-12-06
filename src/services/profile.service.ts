@@ -5,7 +5,7 @@ const MOCK_PROFILES: Record<string, UserProfile | ConsultantProfile> = {
   'test-user-123': {
     id: 'test-user-123',
     email: 'test@example.com',
-    displayName: 'Test User',
+    displayName: 'John Smith',
     userType: 'consultant',
     createdAt: new Date(),
     expertise: ['Corporate Law', 'Contract Law'],
